@@ -1,11 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowUpRight, Moon, Sun } from 'lucide-react';
 
+function getCookie(name: string): string | null {
+  if (typeof document === 'undefined') return null;
+  const match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
+  return match ? decodeURIComponent(match[3]) : null;
+}
+
+function setCookie(name: string, value: string, days = 365) {
+  if (typeof document === 'undefined') return;
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  const hostname = window.location.hostname;
+  
+  // Set domain=.quirks.dpdns.org so it's shared with javascript.quirks.dpdns.org
+  let domainAttr = '';
+  if (hostname.endsWith('quirks.dpdns.org')) {
+    domainAttr = '; domain=.quirks.dpdns.org';
+  }
+
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax${domainAttr}`;
+}
+
 export default function App() {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('theme');
-      if (stored === 'light' || stored === 'dark') return stored;
+      const storedCookie = getCookie('theme');
+      if (storedCookie === 'light' || storedCookie === 'dark') return storedCookie;
+      const storedLocal = localStorage.getItem('theme');
+      if (storedLocal === 'light' || storedLocal === 'dark') return storedLocal;
       return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'dark';
     }
     return 'dark';
@@ -18,6 +40,7 @@ export default function App() {
     } else {
       root.classList.remove('dark');
     }
+    setCookie('theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
 

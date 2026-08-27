@@ -6,6 +6,21 @@
     <title>Quirks</title>
     <meta name="description" content="Quirks root directory." />
     <meta name="robots" content="index, follow" />
+
+    <!-- Prevent theme flicker by applying theme from cookie / localStorage early -->
+    <script>
+      (function () {
+        try {
+          var match = document.cookie.match(/(?:^|;\s*)theme=([^;]*)/);
+          var theme = match ? decodeURIComponent(match[1]) : localStorage.getItem('theme');
+          if (theme === 'light') {
+            document.documentElement.classList.remove('dark');
+          } else {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
     
     <!-- Google AdSense Account Meta Tag -->
     <meta name="google-adsense-account" content="ca-pub-6816887029574421" />
