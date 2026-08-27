@@ -1,0 +1,6 @@
+{
+  "name": "quirks-root",
+  "description": "Root domain site for Google AdSense verification and crawler discovery.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
